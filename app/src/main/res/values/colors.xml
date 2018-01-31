@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorAccent">#04c2b1</color>
+    <color name="colorA">#9E9E9E</color>
+    <color name="background">#D32F2F</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="theme_transparent">#97009688</color>
+    <color name="theme_trans_white">#8cfbfcfc</color>
+
+    <color name="app_text_color_dark">#4F5F6F</color>
+    <color name="app_text_color_grey">#A6B1BC</color>
+
+    <color name="product_name_text_color">#01adb2</color>
+</resources>

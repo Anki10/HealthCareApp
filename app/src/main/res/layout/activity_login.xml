@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back"
+    android:orientation="vertical"
+    tools:context=".activities.Login_Activity"
+    android:weightSum="1">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:padding="5dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login As :"
+        android:layout_margin="7dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+<RadioGroup
+    android:id="@+id/login_rg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+
+    <RadioButton
+        android:id="@+id/dr_rbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Doctor"
+        android:layout_weight="1"/>
+
+    <RadioButton
+        android:id="@+id/patient_rbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Patient"
+        android:layout_weight="1"/>
+
+</RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/dr_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/email_et"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:textSize="12dp"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:text=""
+            android:hint="Email id" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/pass_et"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:textSize="12dp"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:text=""
+            android:hint="Password" />
+
+    </android.support.design.widget.TextInputLayout>
+
+
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:textSize="16sp"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
+           android:layout_margin="25dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_margin="2dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New User ?"
+                android:textSize="16sp"/>
+
+
+            <TextView
+                android:id="@+id/login_reg_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SignUp"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:textColor="@color/colorPrimary"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_margin="2dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register for Setup ?"
+                android:textSize="16sp"/>
+
+
+            <TextView
+                android:id="@+id/setup_reg_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Setup Register Here"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:textColor="@color/colorPrimary"/>
+
+        </LinearLayout>
+
+
+
+        <View
+            android:layout_width="140dp"
+            android:layout_height=".2dp"
+            android:layout_gravity="center"
+            android:background="@color/black"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
+
+
+
+
+

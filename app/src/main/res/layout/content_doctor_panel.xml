@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/backs"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.winklix.indu.healthcareapp.activities.DoctorPanelActivity"
+    tools:showIn="@layout/app_bar_doctor_panel">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Patient Detail"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="25sp"
+        android:textStyle="bold"/>
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="6dp"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="@color/theme_trans_white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/p_name_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:textSize="12dp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:hint="Patient Name"
+                    android:textColor="@color/black"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/p_email_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:textSize="12dp"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:hint="Patient Email"
+                    android:textColor="@color/black"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/p_phone_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:textSize="12dp"
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    android:hint="Patient Mobile Number"
+                    android:textColor="@color/black"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/p_address_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:textSize="12dp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:hint="Patient Address"
+                    android:textColor="@color/black"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/p_reason_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:textSize="12dp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:hint="Reason"
+                    android:textColor="@color/black"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/p_reffby_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:textSize="12dp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:hint="Refference By"
+                    android:textColor="@color/black"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/psubmit_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Submit"
+                android:layout_gravity="center"
+                android:background="@color/theme_transparent"
+                android:padding="10dp"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:layout_margin="10dp"/>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

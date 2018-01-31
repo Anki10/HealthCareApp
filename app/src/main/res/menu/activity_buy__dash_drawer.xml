@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/book_appointment"
+            android:title="Book an appointment" />
+        <item0
+            android:id="@+id/order_medicines"
+            android:title="Order medicines" />
+
+    </group>
+
+    <item android:title="Doctors">
+        <menu>
+            <item
+                android:id="@+id/Refer_patient"
+                android:title="Refer patient" />
+            <item
+                android:id="@+id/my_account"
+                android:title="My Account" />
+
+        </menu>
+    </item>
+
+    <item android:title="Lab Tests">
+        <menu>
+
+            <item
+                android:id="@+id/book_lab"
+                android:title="Book Lab Test" />
+
+
+        </menu>
+
+    </item>
+
+    <item android:title="Articles">
+        <menu>
+            <item
+                android:id="@+id/need_help"
+                android:title="Need Help"/>
+
+            <item
+                android:id="@+id/refer"
+                android:title="Refer  Earn"/>
+            <item
+                android:id="@+id/setting"
+                android:title="Settings"/>
+            <item
+                android:id="@+id/feedback"
+                android:title="Feedback"/>
+            <item
+                android:id="@+id/about"
+                android:title="About Us"/>
+
+
+
+
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/back"
+    tools:context="com.winklix.indu.healthcareapp.activities.RegisterActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Register As :"
+            android:layout_margin="7dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"/>
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <RadioButton
+                android:id="@+id/dr_reg_rb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Doctor"
+                android:layout_weight="1"/>
+
+            <RadioButton
+                android:id="@+id/patient_reg_rb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Patient"
+                android:layout_weight="1"/>
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/reg_name_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:textSize="12dp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:hint="Name" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/reg_email_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:textSize="12dp"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:hint="Email id" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/reg_phone_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:textSize="12dp"
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    android:hint="Mobile Number" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/reg_pass_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:textSize="12dp"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:hint="Password" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+
+            <Button
+                android:id="@+id/reg_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Register"
+                android:textSize="16sp"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:layout_margin="25dp"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Already have an account?"
+                android:textSize="16sp"/>
+
+
+            <TextView
+                android:id="@+id/reg_login_tv"
+                android:layout_width="50dp"
+                android:layout_height="25dp"
+                android:text="Login"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="140dp"
+            android:layout_height=".2dp"
+            android:layout_gravity="center"
+            android:background="@color/black"/>
+
+
+    </LinearLayout>
+</LinearLayout>

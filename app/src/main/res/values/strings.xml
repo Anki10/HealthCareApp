@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Health Care</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_book">Map</string>
+    <string name="title_activity_service">Service</string>
+    <string name="title_activity_login2">Login2</string>
+    <string name="title_activity_buy__dash_">Buy_Dash_Activity</string>
+    <string name="desc">Stuffy Nose Decongestants can curb swelling inside your nose and sinuses, and help you breathe more easily.
+    There are two types:
+    Pills or syrups. If you see the letter "D" at the end of a medicine name, it means it includes a decongestant.
+    Look for products with phenylephrine or pseudoephedrine.Products with oxymetazoline and phenylephrine
+        may work faster than pills or syrups. But if you use them for more than 2-3 days in a row, your congestion could get worse.</string>
+    <string name="title_activity_doctor_panel">DoctorPanelActivity</string>
+    <string name="title_activity_buy_dashboard">BuyDashboardActivity</string>
+    <string name="title_activity_service_doctor_list">Map</string>
+    <string name="search_prod">Enter Product Name/Prize...</string>
+    <string name="search_service">Enter Location/Service Name...</string>
+
+    <string name="activity_label">Example</string>
+    <string name="image_button_content_description">Change state of section</string>
+</resources>

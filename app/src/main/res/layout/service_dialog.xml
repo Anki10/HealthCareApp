@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Your service Type ?"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:layout_margin="10dp"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:id="@+id/service_type_rg"
+        android:layout_margin="5dp">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:id="@+id/home_service_rb"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Home Visit"
+            android:layout_margin="5dp"/>
+        <RadioButton
+            android:id="@+id/sharing_service_rb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sharing"
+            android:layout_margin="5dp"
+            />
+    </RadioGroup>
+
+    <Button
+        android:text="Submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/service_btnSubmit"
+        android:background="@color/colorAccent"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>
