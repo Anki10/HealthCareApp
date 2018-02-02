@@ -48,7 +48,7 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
         LocationListener {
 
     private Button btn_1Day,btn_2day,btn_5day,btn_10days,btn_15days,btn_20days;
-    private String cat_id,subCat_id,service_type,from;
+    private String cat_id,subCat_id,service_type,from,price;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private LocationListener listener;
@@ -90,6 +90,7 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
         subCat_id = getIntent().getStringExtra("subCat_id");
         service_type = getIntent().getStringExtra("service_type");
         from = getIntent().getStringExtra("from");
+        price = getIntent().getStringExtra("price");
 
         startUpdatesButtonHandler();
 
@@ -118,7 +119,7 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
                 if (from.equalsIgnoreCase("HomeVisit")){
                     servicetype(service_type,"1");
                 } else {
-                    LocationService();
+                    LocationService("1");
                 }
 
 
@@ -128,7 +129,7 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
                 if (from.equalsIgnoreCase("HomeVisit")){
                     servicetype(service_type,"2");
                 } else {
-                    LocationService();
+                    LocationService("2");
                 }
                 break;
 
@@ -136,7 +137,7 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
                 if (from.equalsIgnoreCase("HomeVisit")){
                     servicetype(service_type,"5");
                 } else {
-                    LocationService();
+                    LocationService("5");
                 }
                 break;
 
@@ -144,7 +145,7 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
                 if (from.equalsIgnoreCase("HomeVisit")){
                     servicetype(service_type,"10");
                 } else {
-                    LocationService();
+                    LocationService("10");
                 }
                 break;
 
@@ -152,7 +153,7 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
                 if (from.equalsIgnoreCase("HomeVisit")){
                     servicetype(service_type,"15");
                 } else {
-                    LocationService();
+                    LocationService("15");
                 }
                 break;
 
@@ -160,7 +161,7 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
                 if (from.equalsIgnoreCase("HomeVisit")){
                     servicetype(service_type,"20");
                 } else {
-                    LocationService();
+                    LocationService("20");
                 }
                 break;
 
@@ -190,7 +191,7 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
         });
     }
 
-   private void LocationService(){
+   private void LocationService(String days){
 
         Intent intent = new Intent(ServicePackageActivity.this,NearByServiceCenter_Activity.class);
         intent.putExtra("cat_id",cat_id);
@@ -198,6 +199,8 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
         intent.putExtra("latitude",latitude);
         intent.putExtra("longitude",longitude);
         intent.putExtra("from",from);
+        intent.putExtra("days",days);
+        intent.putExtra("price",price);
 
         startActivity(intent);
 

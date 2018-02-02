@@ -17,6 +17,7 @@ import com.winklix.indu.healthcareapp.adapters.SharingServiceAdapter;
 import com.winklix.indu.healthcareapp.api.RestClient;
 import com.winklix.indu.healthcareapp.pojo.LocationServiceDataPojo;
 import com.winklix.indu.healthcareapp.pojo.LocationServicePojo;
+import com.winklix.indu.healthcareapp.testlist.MyDialog;
 
 import java.util.ArrayList;
 
@@ -24,15 +25,17 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class NearByServiceCenter_Activity extends AppCompatActivity {
+public class NearByServiceCenter_Activity extends AppCompatActivity implements View.OnClickListener {
 
     Context mcontext;
     private SharingServiceAdapter adapter;
     RecyclerView sharing_dr_recy_view;
     private RecyclerView.LayoutManager mLayoutManager;
-    private String cat_id,subCat_id,latitude,longitude;
+    private String cat_id,subCat_id,latitude,longitude,days,price;
     private ArrayList<LocationServiceDataPojo> list;
-    private Dialog myDialog;
+    private MyDialog myDialog;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +51,12 @@ public class NearByServiceCenter_Activity extends AppCompatActivity {
         subCat_id = getIntent().getStringExtra("subCat_id");
         latitude = getIntent().getStringExtra("latitude");
         longitude = getIntent().getStringExtra("longitude");
+        days = getIntent().getStringExtra("days");
+        price = getIntent().getStringExtra("price");
 
         list = new ArrayList<LocationServiceDataPojo>();
 
-        myDialog = new Dialog(this);
+        myDialog = new MyDialog(this);
 
         mcontext = NearByServiceCenter_Activity.this;
 
@@ -65,34 +70,40 @@ public class NearByServiceCenter_Activity extends AppCompatActivity {
         dialog.setContentView(R.layout.payment_popup);
         dialog.setTitle("Our Services Availabel 24*7");
 
-//        Button online_pay_btn = (Button) dialog.findViewById(R.id.online_pay_btn);
-//
-//        online_pay_btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mcontext.startActivity(new Intent(mcontext, PaymentActivity.class));
-//                dialog.dismiss();
-//            }
-//        });
-//
-//
-//
-//        Button cash_pay_btn = (Button) dialog.findViewById(R.id.cash_pay_btn);
-//
-//        cash_pay_btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(mcontext, "Thanks", Toast.LENGTH_SHORT).show();
-//                mcontext.startActivity(new Intent(mcontext, ServiceLocation_Activity.class));
-//                dialog.dismiss();
-//
-//            }
-//        });
+        Button online_pay_btn = (Button) dialog.findViewById(R.id.online_pay_btn);
+
+        online_pay_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mcontext,PaymentActivity.class);
+                intent.putExtra("price", price);
+                intent.putExtra("days",days);
+                startActivity(intent);
+
+                dialog.dismiss();
+            }
+        });
+
+
+
+        Button cash_pay_btn = (Button) dialog.findViewById(R.id.cash_pay_btn);
+
+        cash_pay_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mcontext, "Thanks", Toast.LENGTH_SHORT).show();
+                mcontext.startActivity(new Intent(mcontext, ServiceLocation_Activity.class));
+                dialog.dismiss();
+
+            }
+        });
 
         dialog.show();
     }
 
     private void LocationService(){
+
+        myDialog.ShowProgressDialog();
 
         RestClient.get().LocationService(cat_id, subCat_id,"28.6276", "77.2784", new Callback<LocationServicePojo>() {
             @Override
@@ -103,6 +114,8 @@ public class NearByServiceCenter_Activity extends AppCompatActivity {
                 adapter = new SharingServiceAdapter(NearByServiceCenter_Activity.this,list);
                 sharing_dr_recy_view.setAdapter(adapter);
 
+                myDialog.CancelProgressDialog();
+
                 System.out.println("xxx success");
             }
 
@@ -110,6 +123,8 @@ public class NearByServiceCenter_Activity extends AppCompatActivity {
             public void failure(RetrofitError error) {
 
                 System.out.println("xxx faill");
+
+                myDialog.CancelProgressDialog();
 
             }
         });

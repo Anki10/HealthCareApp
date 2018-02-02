@@ -140,7 +140,7 @@ public class ServiceDescActivity extends AppCompatActivity  {
         dialog.ShowProgressDialog();
         RestClient.get().ServiceDescription(cat_id, subCat_id, service_type, new Callback<ServiceDescriptionPojo>() {
             @Override
-            public void success(ServiceDescriptionPojo serviceDescriptionPojo, retrofit.client.Response response) {
+            public void success(final ServiceDescriptionPojo serviceDescriptionPojo, retrofit.client.Response response) {
 
                 final Dialog dialog1 = new Dialog(ServiceDescActivity.this);
                 dialog1.setTitle("Select service Type...");
@@ -173,6 +173,7 @@ public class ServiceDescActivity extends AppCompatActivity  {
                         intent.putExtra("subCat_id",subCat_id);
                         intent.putExtra("service_type",service_type);
                         intent.putExtra("from",from);
+                        intent.putExtra("price",serviceDescriptionPojo.getData().getService_price());
                         startActivity(intent);
                         dialog1.dismiss();
                     }

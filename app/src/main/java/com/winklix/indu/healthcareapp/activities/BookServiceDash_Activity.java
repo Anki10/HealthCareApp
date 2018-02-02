@@ -95,9 +95,6 @@ public class BookServiceDash_Activity extends AppCompatActivity
    //     getServicesFromDB("");
         getBookServiceList();
 
-
-
-
 //        service_recy_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
 //            @Override
 //            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -113,7 +110,6 @@ public class BookServiceDash_Activity extends AppCompatActivity
     private void getBookServiceList(){
         dialog.ShowProgressDialog();
 
-
         RestClient.get().GetServiceCategoryList(new Object(), new Callback<ServiceCategoryPojo>() {
             @Override
             public void success(ServiceCategoryPojo serviceCategoryPojo, retrofit.client.Response response) {
@@ -124,6 +120,8 @@ public class BookServiceDash_Activity extends AppCompatActivity
                 serviceAdapter = new ServiceAdapter(context, serviceCategoryPojo.getData());
                 service_recy_view.setAdapter(serviceAdapter);
                 service_recy_view.setItemAnimator(new DefaultItemAnimator());
+
+
 
                 dialog.CancelProgressDialog();
 

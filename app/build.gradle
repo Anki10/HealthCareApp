@@ -46,6 +46,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-plus:11.8.0'
     compile 'com.google.android.gms:play-services-gcm:11.8.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
-
+    compile('com.payumoney.sdkui:plug-n-play:1.1.0'){
+        transitive = true;
+        exclude module: 'payumoney-sdk'
+    }
+    compile 'com.payumoney.core:payumoney-sdk:7.1.0'
 
 }

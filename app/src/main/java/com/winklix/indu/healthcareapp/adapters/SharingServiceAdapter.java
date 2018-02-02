@@ -5,9 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.winklix.indu.healthcareapp.R;
+import com.winklix.indu.healthcareapp.activities.NearByServiceCenter_Activity;
 import com.winklix.indu.healthcareapp.pojo.LocationServiceDataPojo;
 
 import java.util.ArrayList;
@@ -52,12 +54,15 @@ public class SharingServiceAdapter extends RecyclerView.Adapter<SharingServiceAd
     public class MYHolder extends RecyclerView.ViewHolder {
 
         private TextView clinic_name,clinic_address;
+        private Button book_btn;
 
         public MYHolder(View itemView) {
             super(itemView);
 
             clinic_name = (TextView) itemView.findViewById(R.id.tv_clinic_name);
             clinic_address = (TextView) itemView.findViewById(R.id.tv_clinic_address);
+
+            book_btn = (Button) itemView.findViewById(R.id.book_btn);
         }
     }
 }
