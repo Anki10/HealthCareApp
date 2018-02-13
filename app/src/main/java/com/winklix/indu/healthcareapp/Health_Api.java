@@ -7,6 +7,7 @@ public class Health_Api {
 	 public static final String PatientName = "p_name";
 	 public static final String PatientEmail = "p_email";
 	 public static final String USERID = "UserId";
+	 public static final String LoginFrom = "loginfrom";
 
 
 

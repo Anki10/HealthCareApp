@@ -4,7 +4,16 @@ import com.winklix.indu.healthcareapp.modals.Product_Modal;
 import com.winklix.indu.healthcareapp.pojo.AddtoCartPojo;
 import com.winklix.indu.healthcareapp.pojo.CategoryPojo;
 import com.winklix.indu.healthcareapp.pojo.GetCartPojo;
+import com.winklix.indu.healthcareapp.pojo.HomeVisitDiseasesPojo;
+import com.winklix.indu.healthcareapp.pojo.HomeVisitorBookingsPojo;
+import com.winklix.indu.healthcareapp.pojo.HomeVisitorLeadStatusPojo;
+import com.winklix.indu.healthcareapp.pojo.HomevisitTypeListingPojo;
+import com.winklix.indu.healthcareapp.pojo.HomevisitcategoryPojo;
+import com.winklix.indu.healthcareapp.pojo.HomevisitorlocationDataPojo;
+import com.winklix.indu.healthcareapp.pojo.HomevisitorlocationPojo;
 import com.winklix.indu.healthcareapp.pojo.LocationServicePojo;
+import com.winklix.indu.healthcareapp.pojo.LoginResponsePojo;
+import com.winklix.indu.healthcareapp.pojo.PaymentResponsePojo;
 import com.winklix.indu.healthcareapp.pojo.ProductDataPojo;
 import com.winklix.indu.healthcareapp.pojo.RegisterPojo;
 import com.winklix.indu.healthcareapp.pojo.ServiceCategoryPojo;
@@ -31,6 +40,10 @@ public interface Api {
     void category(Callback<CategoryPojo> callback);
 
     @FormUrlEncoded
+    @POST("/service_login.php")
+    void Login(@Field("email") String email, @Field("password") String password, @Field("role") String role, @Field("device_id") String device_id, Callback<LoginResponsePojo>callback);
+
+    @FormUrlEncoded
     @POST("/product.php")
     void GetProductList(@Field("category") String category, @Field("subcategory") String subcategory, Callback<ProductDataPojo> callback);
 
@@ -44,8 +57,9 @@ public interface Api {
     @GET("/getcart.php")
     void GetCart(@Query("session") String session, Callback<GetCartPojo>callback);
 
+    @FormUrlEncoded
     @POST("/servicelisting.php")
-    void ServiceListing(@Field("category_id") String category_id, @Field("subcategory_id") String subcategory_id, Callback<ServiceListingPojo>callback);
+    void ServiceListing(@Field("category_id") String category_id, @Field("subcategory_id") String subcategory_id,@Field("service_name") String service_name, Callback<ServiceListingPojo>callback);
 
     @FormUrlEncoded
     @POST("/register.php")
@@ -66,5 +80,32 @@ public interface Api {
     @FormUrlEncoded
     @POST("/locationServices.php")
     void LocationService(@Field("category_id") String category_id, @Field("subcategory_id") String subcategory_id, @Field("latitude") String latitude, @Field("longitude") String  longitude, Callback<LocationServicePojo> callback);
+
+    @POST("/homevisitcategory.php")
+    void homevisit(@Body Object object, Callback<HomevisitcategoryPojo> callback);
+
+    @FormUrlEncoded
+    @POST("/homeVisitDiseases.php")
+    void homeVisitDiseases(@Field("category_id") String category_id, Callback<HomeVisitDiseasesPojo>callback);
+
+    @FormUrlEncoded
+    @POST("/homeVisitTypeListing.php")
+    void homevisitTypeListing(@Field("category_id") String category_id, @Field("service_name") String service_name, Callback<HomevisitTypeListingPojo> callback);
+
+    @FormUrlEncoded
+    @POST("/notification.php")
+    void PaymentResponse(@Field("category_id") String category_id, @Field("latitude") String latitude, @Field("longitude") String longitude, @Query("amount") String amount, @Query("patient_id") String patient_id, @Field("address") String address, Callback<PaymentResponsePojo> callback);
+
+    @FormUrlEncoded
+    @POST("/homevisitorlocation.php")
+    void HomeVisitLocation(@Field("category_id") String category_id, @Field("latitude") String latitude, @Field("longitude") String longitude, Callback<HomevisitorlocationPojo> callback);
+
+    @FormUrlEncoded
+    @POST("/update_homeVisitor_leadStatus.php")
+    void HomeVisitor(@Field("booking_id") String booking_id, @Field("home_visitor_id") String home_visitor_id, Callback<HomeVisitorLeadStatusPojo>callback);
+
+    @FormUrlEncoded
+    @POST("/homeVisitorBookings.php")
+    void HomeVisitorBooking(@Field("home_visitor_id") String home_visitor_id, Callback<HomeVisitorBookingsPojo>callback);
 
 }

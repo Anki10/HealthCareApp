@@ -61,10 +61,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         reg_phone_et = (EditText) findViewById(R.id.reg_phone_et);
         reg_pass_et = (EditText) findViewById(R.id.reg_pass_et);
 
-
-        dr_reg_rb = (RadioButton) findViewById(R.id.dr_reg_rb);
-        patient_reg_rb = (RadioButton)findViewById(R.id.patient_reg_rb);
-
         reg_btn = (Button)findViewById(R.id.reg_btn);
 
         reg_btn.setOnClickListener(this);
@@ -219,6 +215,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                 Intent intents = new Intent(this, Login_Activity.class);
                 startActivity(intents);
+                finish();
                 break;
         }
 }
@@ -236,8 +233,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onBackPressed() {
         super.onBackPressed();
 
-        Intent intents = new Intent(this, Login_Activity.class);
-        startActivity(intents);
         finish();
     }
 }

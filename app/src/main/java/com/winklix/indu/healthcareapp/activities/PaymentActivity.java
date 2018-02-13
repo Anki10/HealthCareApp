@@ -1,9 +1,14 @@
 package com.winklix.indu.healthcareapp.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +19,11 @@ import android.widget.Toast;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneyConstants;
 import com.payumoney.core.PayUmoneySdkInitializer;
+import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
+import com.payumoney.sdkui.ui.utils.ResultModel;
+import com.winklix.indu.healthcareapp.Health_Api;
+import com.winklix.indu.healthcareapp.Health_Shared_Pref;
 import com.winklix.indu.healthcareapp.R;
 import com.winklix.indu.healthcareapp.testlist.AppEnvironment;
 import com.winklix.indu.healthcareapp.testlist.AppPreference;
@@ -33,13 +42,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class PaymentActivity extends AppCompatActivity {
-
+    public static final String TAG = "PaymentActivity : ";
     private String service_price,days;
     private TextView tv_service_price,service_after_price;
-    int price,per_1,day;
+    int price,per_1,day, totalprice;
     private PayUmoneySdkInitializer.PaymentParam mPaymentParams;
     private AppPreference mAppPreference;
     private Button service_btnSubmit;
+    Health_Shared_Pref health_shared_pref;
+    String pName_str,pEmail_str;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,25 +60,35 @@ public class PaymentActivity extends AppCompatActivity {
 
         mAppPreference = new AppPreference();
 
+        context = PaymentActivity.this;
         service_price = getIntent().getStringExtra("price");
         days = getIntent().getStringExtra("days");
 
+
+        health_shared_pref = new Health_Shared_Pref(context);
+        pName_str = health_shared_pref.getPrefranceStringValue(Health_Api.PatientName);
+        pEmail_str = health_shared_pref.getPrefranceStringValue(Health_Api.PatientEmail);
+
+
         tv_service_price = (TextView) findViewById(R.id.service_price);
         service_after_price = (TextView) findViewById(R.id.service_after_price);
-
         service_btnSubmit = (Button) findViewById(R.id.service_btnSubmit);
 
-        tv_service_price.setText("Total Payable Amount Rs: "+ service_price);
 
-        price = Integer.parseInt(service_price);
+
+       price = Integer.parseInt(service_price);
         day = Integer.parseInt(days);
+        totalprice = price*day;
+        tv_service_price.setText("Total Payable Amount Rs: "+ totalprice);
+  // price =10;
+  // day = 2;
 
-        service_after_price.setText("Payable amount after discount Rs:  "+ price);
+        service_after_price.setText("Payable amount after discount Rs:  "+ totalprice);
 
         service_btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               launchPayUMoneyFlow();
+                launchPayUMoneyFlow();
             }
         });
 
@@ -80,17 +102,18 @@ public class PaymentActivity extends AppCompatActivity {
         switch(view.getId()) {
             case R.id.pay30:
                 if (checked)
-                    price = Integer.parseInt(service_price);
+                    price = totalprice;
 
-                  service_after_price.setText("Payable amount after discount Rs:  "+ price);
-                    break;
+                service_after_price.setText("Payable amount after discount Rs:  "+ price);
+                break;
             case R.id.pay50:
                 if (checked)
-                     price = Integer.parseInt(service_price);
+                    price = Integer.parseInt(service_price);
 
-                int per = price*10*day/100;
+                int per = totalprice*10/100;
 
-                int main_per = price-per;
+                int main_per = totalprice-per;
+                price =main_per;
 
                 service_after_price.setText("Payable amount after discount Rs:  "+ main_per);
                 break;
@@ -99,19 +122,68 @@ public class PaymentActivity extends AppCompatActivity {
                 if (checked)
                     price = Integer.parseInt(service_price);
 
-                per_1 = price*15*day/100;
+                per_1 = totalprice*15/100;
 
-                int main_per_1 = price-per_1;
-
+                int main_per_1 = totalprice-per_1;
+                price =main_per_1;
                 service_after_price.setText("Payable amount after discount Rs:  "+ main_per_1);
                 break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result Code is -1 send from Payumoney activity
+        Log.d("MainActivity", "request code " + requestCode + " resultcode " + resultCode);
+        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data !=
+                null) {
+            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager
+                    .INTENT_EXTRA_TRANSACTION_RESPONSE);
+
+            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
+
+            // Check which object is non-null
+            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
+                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
+                    //Success Transaction
+                } else {
+                    //Failure Transaction
+                }
+
+                // Response from Payumoney
+                String payuResponse = transactionResponse.getPayuResponse();
+
+                // Response from SURl and FURL
+                String merchantResponse = transactionResponse.getTransactionDetails();
+
+                /*--------------------------------PAyumoney sucess status api hit here------------------------------------*/
+
+   Toast.makeText(this, "Hit your api  here...", Toast.LENGTH_SHORT).show();
+
+                new AlertDialog.Builder(this)
+                        .setCancelable(false)
+                        .setMessage("Payu's Data : " + payuResponse + "\n\n\n Merchant's Data: " + merchantResponse)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+
+            } else if (resultModel != null && resultModel.getError() != null) {
+                Log.d(TAG, "Error response : " + resultModel.getError().getTransactionResponse());
+            } else {
+                Log.d(TAG, "Both objects are null!");
+            }
+        }
+    }
+
+
+
+
     private void launchPayUMoneyFlow() {
-
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
-
 //        //Use this to set your custom text on result screen button
 //        payUmoneyConfig.setDoneButtonText(((EditText) findViewById(R.id.status_page_et)).getText().toString());
 //
@@ -128,10 +200,10 @@ public class PaymentActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         String txnId = System.currentTimeMillis() + "";
-        String phone = "";
+        String phone = "7503808043";
         String productName = mAppPreference.getProductInfo();
         String firstName = mAppPreference.getFirstName();
-        String email = "";
+        String email = pEmail_str;
         String udf1 = "";
         String udf2 = "";
         String udf3 = "";
@@ -144,7 +216,7 @@ public class PaymentActivity extends AppCompatActivity {
         String udf10 = "";
 
         AppEnvironment appEnvironment = ((BaseApplication) getApplication()).getAppEnvironment();
-        builder.setAmount(amount)
+        builder.setAmount(10)
                 .setTxnId(txnId)
                 .setPhone(phone)
                 .setProductName(productName)

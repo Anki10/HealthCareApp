@@ -21,7 +21,9 @@ import com.winklix.indu.healthcareapp.R;
 import com.winklix.indu.healthcareapp.adapters.Doctor_Adapter;
 import com.winklix.indu.healthcareapp.api.RestClient;
 import com.winklix.indu.healthcareapp.modals.Doctor_Modal;
+import com.winklix.indu.healthcareapp.pojo.ServiceDescriptionDataPojo;
 import com.winklix.indu.healthcareapp.pojo.ServiceDescriptionPojo;
+import com.winklix.indu.healthcareapp.pojo.ServiceListingDataPojo;
 import com.winklix.indu.healthcareapp.pojo.ServiceListingPojo;
 import com.winklix.indu.healthcareapp.testlist.MyDialog;
 
@@ -40,19 +42,20 @@ import okhttp3.Response;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 
-public class ServiceDescActivity extends AppCompatActivity  {
+public class ServiceDescActivity extends AppCompatActivity {
 
 
-    Button patient_silver,patient_platinum,patient_gold;
+    Button patient_silver, patient_platinum, patient_gold;
     Context context;
     private Doctor_Adapter doctor_adapter;
     private List<Doctor_Modal> doctor_modals;
     LinearLayoutManager layoutManager;
     ProgressDialog pd;
-    String cat_id,subCat_id,from;
+    String cat_id, subCat_id, from,service_name;
     RecyclerView dr_recy_view;
     Health_Shared_Pref health_shared_pref;
     private MyDialog dialog;
+    private ArrayList<ServiceListingDataPojo> servicelist;
 
 
     @Override
@@ -64,35 +67,41 @@ public class ServiceDescActivity extends AppCompatActivity  {
         patient_platinum = (Button) findViewById(R.id.patient_platinum);
         patient_gold = (Button) findViewById(R.id.patient_gold);
 
+        servicelist = new ArrayList<>();
+
         dialog = new MyDialog(this);
 
         cat_id = getIntent().getStringExtra("cat_id");
         subCat_id = getIntent().getStringExtra("subCat_id");
         from = getIntent().getStringExtra("from");
+        service_name = getIntent().getStringExtra("service_name");
 
-        patient_silver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-    //            servicetype("3");
-                serviceDescription("3","SILVER");
-            }
-        });
+        patient_silver.setVisibility(View.INVISIBLE);
+        patient_platinum.setVisibility(View.INVISIBLE);
+        patient_gold.setVisibility(View.INVISIBLE);
 
-        patient_platinum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-     //           servicetype("1");
-                serviceDescription("1","PLATINUM");
-            }
-        });
+        getServiceListing();
 
-        patient_gold.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-      //          servicetype("2");
-                serviceDescription("2","GOLD");
-            }
-        });
+//        patient_silver.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                serviceDescription("3", "SILVER");
+//            }
+//        });
+//
+//        patient_platinum.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                serviceDescription("1", "PLATINUM");
+//            }
+//        });
+//
+//        patient_gold.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                serviceDescription("2", "GOLD");
+//            }
+//        });
 
 
         context = ServiceDescActivity.this;
@@ -102,10 +111,10 @@ public class ServiceDescActivity extends AppCompatActivity  {
 
         //service_id_str = health_shared_pref.getPrefranceStringValue(Health_Api.SERVICE_ID);
 
-        dr_recy_view = (RecyclerView)findViewById(R.id.dr_recy_view);
+        dr_recy_view = (RecyclerView) findViewById(R.id.dr_recy_view);
 
         doctor_modals = new ArrayList<>();
-    //    getCategoryFromDB(service_id_str);
+        //    getCategoryFromDB(service_id_str);
 
 
         layoutManager = new LinearLayoutManager(context);
@@ -135,59 +144,58 @@ public class ServiceDescActivity extends AppCompatActivity  {
     }
 
 
-
-    private void serviceDescription(final String service_type, final String service_name){
-        dialog.ShowProgressDialog();
-        RestClient.get().ServiceDescription(cat_id, subCat_id, service_type, new Callback<ServiceDescriptionPojo>() {
-            @Override
-            public void success(final ServiceDescriptionPojo serviceDescriptionPojo, retrofit.client.Response response) {
-
-                final Dialog dialog1 = new Dialog(ServiceDescActivity.this);
-                dialog1.setTitle("Select service Type...");
-                dialog1.setContentView(R.layout.service_type_dialog);
-                TextView tv_title = (TextView) dialog1.findViewById(R.id.tv_service_type);
-                final TextView tv_description = (TextView) dialog1.findViewById(R.id.tv_service_description);
-                final TextView tv_price = (TextView) dialog1.findViewById(R.id.tv_servicePrice);
-                final Button service_type_Submit = (Button) dialog1.findViewById(R.id.service_type_btnSubmit);
-
-
-                tv_title.setText("Your Service Type : "+ service_name);
-
-                tv_description.setText(serviceDescriptionPojo.getData().getService_description());
-                tv_price.setText(serviceDescriptionPojo.getData().getService_price());
-
-                DisplayMetrics displaymetrics = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-                int width = (int) ((int)displaymetrics.widthPixels * 0.9);
-                int height = (int) ((int)displaymetrics.heightPixels * 0.4);
-                dialog1.getWindow().setLayout(width, height);
-                dialog1.show();
-
-                dialog.CancelProgressDialog();
-
-                service_type_Submit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(ServiceDescActivity.this,ServicePackageActivity.class);
-                        intent.putExtra("cat_id",cat_id);
-                        intent.putExtra("subCat_id",subCat_id);
-                        intent.putExtra("service_type",service_type);
-                        intent.putExtra("from",from);
-                        intent.putExtra("price",serviceDescriptionPojo.getData().getService_price());
-                        startActivity(intent);
-                        dialog1.dismiss();
-                    }
-                });
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                  dialog.CancelProgressDialog();
-            }
-        });
-
-    }
+//    private void serviceDescription(final String service_type, final String service_name) {
+//        dialog.ShowProgressDialog();
+//        RestClient.get().ServiceDescription(cat_id, subCat_id, service_type, new Callback<ServiceDescriptionPojo>() {
+//            @Override
+//            public void success(final ServiceDescriptionPojo serviceDescriptionPojo, retrofit.client.Response response) {
+//
+//                final Dialog dialog1 = new Dialog(ServiceDescActivity.this);
+//                dialog1.setTitle("Select service Type...");
+//                dialog1.setContentView(R.layout.service_type_dialog);
+//                TextView tv_title = (TextView) dialog1.findViewById(R.id.tv_service_type);
+//                final TextView tv_description = (TextView) dialog1.findViewById(R.id.tv_service_description);
+//                final TextView tv_price = (TextView) dialog1.findViewById(R.id.tv_servicePrice);
+//                final Button service_type_Submit = (Button) dialog1.findViewById(R.id.service_type_btnSubmit);
+//
+//
+//                tv_title.setText("Your Service Type : " + service_name);
+//
+//                tv_description.setText(serviceDescriptionPojo.getData().getService_description());
+//                tv_price.setText(serviceDescriptionPojo.getData().getService_price());
+//
+//                DisplayMetrics displaymetrics = new DisplayMetrics();
+//                getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+//                int width = (int) ((int) displaymetrics.widthPixels * 0.9);
+//                int height = (int) ((int) displaymetrics.heightPixels * 0.4);
+//                dialog1.getWindow().setLayout(width, height);
+//                dialog1.show();
+//
+//                dialog.CancelProgressDialog();
+//
+//                service_type_Submit.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent intent = new Intent(ServiceDescActivity.this, ServicePackageActivity.class);
+//                        intent.putExtra("cat_id", cat_id);
+//                        intent.putExtra("subCat_id", subCat_id);
+//                        intent.putExtra("service_type", service_type);
+//                        intent.putExtra("from", from);
+//                        intent.putExtra("price", serviceDescriptionPojo.getData().getService_price());
+//                        startActivity(intent);
+//                        dialog1.dismiss();
+//                    }
+//                });
+//
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                dialog.CancelProgressDialog();
+//            }
+//        });
+//
+//    }
 
     private void getCategoryFromDB(final String serviceid) {
         final AsyncTask<String, Void, Void> asyncTaskprog = new AsyncTask<String, Void, Void>() {
@@ -258,52 +266,96 @@ public class ServiceDescActivity extends AppCompatActivity  {
         asyncTaskprog.execute("serviceid");
     }
 
-     /*   book_btn = (Button)findViewById(R.id.book_btn);
-        books_btn = (Button)findViewById(R.id.books_btn);
-        book_btn.setOnClickListener(this);
-        books_btn.setOnClickListener(this);*/
-    }
-
-    /*@Override
-    public void onClick(View view) {
-        int id = view.getId();
-        if (id==R.id.book_btn)
-        {
-            showPopup();
-        }
-        else  if (id==R.id.books_btn)
-        {
-            showPopup();
-        }
-    }
-
-    private void showPopup() {
-
-        final Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.payment_popup);
-        dialog.setTitle("Our Services Availabel 24*7");
-
-        Button online_pay_btn = (Button) dialog.findViewById(R.id.online_pay_btn);
-
-        online_pay_btn.setOnClickListener(new View.OnClickListener() {
+    private void getServiceListing(){
+        dialog.ShowProgressDialog();
+        RestClient.get().ServiceListing(cat_id, subCat_id, service_name, new Callback<ServiceListingPojo>() {
             @Override
-            public void onClick(View v) {
-                context.startActivity(new Intent(context, PaymentActivity.class));
-                dialog.dismiss();
+            public void success(ServiceListingPojo serviceListingPojo, retrofit.client.Response response) {
+                servicelist.addAll(serviceListingPojo.getData());
+
+                dialog.CancelProgressDialog();
+
+                for (int i =0; i< servicelist.size();i++){
+                    if (servicelist.get(i).getService_type().equalsIgnoreCase("1")){
+                        patient_platinum.setVisibility(View.VISIBLE);
+                        final int finalI = i;
+                        final int finalI4 = i;
+                        patient_platinum.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogList(servicelist.get(finalI).getService_description(),servicelist.get(finalI).getService_price(),servicelist.get(finalI4).getService_type());
+                            }
+                        });
+                    } else if (servicelist.get(i).getService_type().equalsIgnoreCase("2")){
+                        patient_gold.setVisibility(View.VISIBLE);
+                        final int finalI2 = i;
+                        final int finalI3 = i;
+                        patient_gold.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogList(servicelist.get(finalI2).getService_description(),servicelist.get(finalI2).getService_price(),servicelist.get(finalI3).getService_type());
+                            }
+                        });
+                    } else if (servicelist.get(i).getService_type().equalsIgnoreCase("3")) {
+                        patient_silver.setVisibility(View.VISIBLE);
+                        final int finalI1 = i;
+                        final int finalI5 = i;
+                        patient_silver.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogList(servicelist.get(finalI1).getService_description(),servicelist.get(finalI1).getService_price(),servicelist.get(finalI5).getService_type());
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+                System.out.println("xxx faill");
+
             }
         });
+    }
+
+    private void dialogList(String desc, final String price, final String servic_type){
+        final Dialog dialog1 = new Dialog(ServiceDescActivity.this);
+        dialog1.setTitle("Select service Type...");
+        dialog1.setContentView(R.layout.service_type_dialog);
+        TextView tv_title = (TextView) dialog1.findViewById(R.id.tv_service_type);
+        final TextView tv_description = (TextView) dialog1.findViewById(R.id.tv_service_description);
+        final TextView tv_price = (TextView) dialog1.findViewById(R.id.tv_servicePrice);
+        final Button service_type_Submit = (Button) dialog1.findViewById(R.id.service_type_btnSubmit);
 
 
+        tv_title.setText("Your Service Type : "+ service_name);
 
-        Button cash_pay_btn = (Button) dialog.findViewById(R.id.cash_pay_btn);
+        tv_description.setText(desc);
+        tv_price.setText(price);
 
-        cash_pay_btn.setOnClickListener(new View.OnClickListener() {
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        int width = (int) ((int)displaymetrics.widthPixels * 0.9);
+        int height = (int) ((int)displaymetrics.heightPixels * 0.4);
+        dialog1.getWindow().setLayout(width, height);
+        dialog1.show();
+
+        dialog.CancelProgressDialog();
+
+        service_type_Submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Thanks...", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+                Intent intent = new Intent(ServiceDescActivity.this,ServicePackageActivity.class);
+                intent.putExtra("cat_id",cat_id);
+                intent.putExtra("subCat_id",subCat_id);
+                intent.putExtra("service_type",servic_type);
+                intent.putExtra("from","sharing");
+                intent.putExtra("price",price);
+                startActivity(intent);
+                dialog1.dismiss();
             }
         });
+    }
 
-        dialog.show();
-*/
+}

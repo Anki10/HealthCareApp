@@ -1,20 +1,23 @@
 package com.winklix.indu.healthcareapp.pojo;
 
+import java.util.ArrayList;
+
 /**
  * Created by dell on 23-01-2018.
  */
 
 public class ServiceDescriptionPojo {
 
-    private ServiceDescriptionDataPojo data;
+    private ArrayList<ServiceDescriptionDataPojo> data;
     private String msg;
     private String response;
 
-    public ServiceDescriptionDataPojo getData() {
+
+    public ArrayList<ServiceDescriptionDataPojo> getData() {
         return data;
     }
 
-    public void setData(ServiceDescriptionDataPojo data) {
+    public void setData(ArrayList<ServiceDescriptionDataPojo> data) {
         this.data = data;
     }
 

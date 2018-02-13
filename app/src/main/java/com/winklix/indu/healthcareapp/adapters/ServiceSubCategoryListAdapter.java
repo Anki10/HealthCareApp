@@ -30,12 +30,15 @@ public class ServiceSubCategoryListAdapter extends RecyclerView.Adapter<ServiceS
 
     private Context context;
     private ArrayList<ServiceNameDataPojo> servicenamelist;
+    private String cat_id,subCat_id;
 
 
-    public ServiceSubCategoryListAdapter(Context context, ArrayList<ServiceNameDataPojo> list){
+    public ServiceSubCategoryListAdapter(Context context, ArrayList<ServiceNameDataPojo> list,String cat_id,String sub_catId){
 
         this.context = context;
         this.servicenamelist = list;
+        this.cat_id = cat_id;
+        this.subCat_id = sub_catId;
 
     }
 
@@ -49,13 +52,22 @@ public class ServiceSubCategoryListAdapter extends RecyclerView.Adapter<ServiceS
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        ServiceNameDataPojo pojo = servicenamelist.get(position);
+        final ServiceNameDataPojo pojo = servicenamelist.get(position);
 
         holder.buy_cat_name.setText(pojo.getService_name());
 
         Picasso.with(context).load("http://2040healthcare.com/images/serviceproduct/" + pojo.getImage()).into(holder.buy_cat_img);
 
-        holder.category_ll.setOnClickListener((ServiceSubCategoryListActivity)context);
+        holder.category_ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intents = new Intent(context, ServiceDescActivity.class);
+                intents.putExtra("cat_id", cat_id);
+                intents.putExtra("subCat_id", subCat_id);
+                intents.putExtra("service_name",pojo.getService_name());
+               context.startActivity(intents);
+            }
+        });
 
     }
 

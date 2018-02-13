@@ -74,7 +74,7 @@ public class ServiceSubCategoryListActivity extends AppCompatActivity implements
                 layoutManager = new GridLayoutManager(ServiceSubCategoryListActivity.this,3);
                 Subcategory_recycle_view.setLayoutManager(layoutManager);
 
-                adapter = new ServiceSubCategoryListAdapter(ServiceSubCategoryListActivity.this, sub_category_list);
+                adapter = new ServiceSubCategoryListAdapter(ServiceSubCategoryListActivity.this, sub_category_list,cat_id,subCat_id);
                 Subcategory_recycle_view.setAdapter(adapter);
                 Subcategory_recycle_view.setItemAnimator(new DefaultItemAnimator());
 
@@ -115,11 +115,7 @@ public class ServiceSubCategoryListActivity extends AppCompatActivity implements
                     dialog.dismiss();
 
                 } else if (sharing_service_rb.isChecked()) {
-                    Intent intents = new Intent(ServiceSubCategoryListActivity.this, ServiceDescActivity.class);
-                    intents.putExtra("cat_id", cat_id);
-                    intents.putExtra("subCat_id", subCat_id);
-                    intents.putExtra("from","Sharing");
-                    startActivity(intents);
+
                     dialog.dismiss();
 
                 }
@@ -133,7 +129,7 @@ public class ServiceSubCategoryListActivity extends AppCompatActivity implements
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.category_ll:
-                SubDialog();
+
         }
     }
 }

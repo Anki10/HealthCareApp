@@ -31,7 +31,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyHolder
 
     private ArrayList<Product_Modal> product_models;
     private Activity mcontext;
-    Intent intent;
     public ArrayList<Product_Modal> mFilteredList;
 
 

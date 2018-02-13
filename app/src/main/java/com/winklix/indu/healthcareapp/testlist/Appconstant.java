@@ -6,5 +6,6 @@ package com.winklix.indu.healthcareapp.testlist;
 
 public class Appconstant {
 
-    public static String BASE_URL = "http://2040healthcare.com/app/";
+    public static String BASE_URL = "https://2040healthcare.com/app/";
+    public final static String PREF_NAME = "com.healthcare.prefs";
 }

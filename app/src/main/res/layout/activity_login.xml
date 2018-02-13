@@ -37,7 +37,7 @@
         android:id="@+id/dr_rbtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Doctor"
+        android:text="Service"
         android:layout_weight="1"/>
 
     <RadioButton
@@ -86,7 +86,48 @@
 
     </android.support.design.widget.TextInputLayout>
 
+            <LinearLayout android:id="@+id/doctor_role_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="invisible"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="15dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ROLE :"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+
+
+
+            <RadioGroup
+                android:id="@+id/dr_role"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/dr_homevisit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Home Visit" />
+
+                <RadioButton
+                    android:id="@+id/dr_sharing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sharing" />
+
+            </RadioGroup>
+
+            </LinearLayout>
 
         <Button
             android:id="@+id/login_btn"
@@ -126,35 +167,6 @@
                 android:textColor="@color/colorPrimary"/>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_margin="2dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Register for Setup ?"
-                android:textSize="16sp"/>
-
-
-            <TextView
-                android:id="@+id/setup_reg_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Setup Register Here"
-                android:gravity="center"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:padding="5dp"
-                android:textColor="@color/colorPrimary"/>
-
-        </LinearLayout>
-
-
 
         <View
             android:layout_width="140dp"

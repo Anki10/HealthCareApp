@@ -1,12 +1,12 @@
 package com.winklix.indu.healthcareapp.activities;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,14 +14,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -30,9 +35,11 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.winklix.indu.healthcareapp.R;
 import com.winklix.indu.healthcareapp.api.RestClient;
 import com.winklix.indu.healthcareapp.pojo.LocationServicePojo;
+import com.winklix.indu.healthcareapp.pojo.ServiceListingDataPojo;
 import com.winklix.indu.healthcareapp.pojo.ServiceListingPojo;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import retrofit.Callback;
@@ -43,41 +50,44 @@ import retrofit.client.Response;
  * Created by dell on 29-01-2018.
  */
 
-public class ServicePackageActivity extends AppCompatActivity implements View.OnClickListener,GoogleApiClient.ConnectionCallbacks,
+public class ServicePackageActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private Button btn_1Day,btn_2day,btn_5day,btn_10days,btn_15days,btn_20days;
-    private String cat_id,subCat_id,service_type,from,price;
+    private Button btn_1Day, btn_2day, btn_5day, btn_10days, btn_15days, btn_20days;
+    private String cat_id, subCat_id, service_type, from, price;
+    //Define a request code to send to Google Play services
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private LocationListener listener;
-    public static final long UPDATE_INERVAL_IN_MILLISECONDS = 600000;
-    private Location mCurrentLocation;
-    private Boolean mRequestingLocationUpdates;
-    private String mLastUpdateTime;
-    private String mLatitudeLabel;
-    private String mLongitudeLabel;
-    private String mLastUpdateTimeLabel;
-    private Context context;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private static final int REQUEST_CHECK_SETTINGS = 10;
+    private double currentLatitude;
+    private double currentLongitude;
+    private ArrayList<ServiceListingDataPojo> list;
 
-    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INERVAL_IN_MILLISECONDS / 2;
-    private double latitude;
-    private double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_packages);
 
-        buildGoogleApiClient();
+        list = new ArrayList<>();
 
-        context = this;
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                // The next two lines tell the new client that “this” current class will handle connection stuff
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                //fourth line adds the LocationServices API endpoint from GooglePlayServices
+                .addApi(LocationServices.API)
+                .build();
 
-        mRequestingLocationUpdates = false;
+        // Create the LocationRequest object
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                .setFastestInterval(1 * 1000);
+
+
+
 
         btn_1Day = (Button) findViewById(R.id.days_1);
         btn_2day = (Button) findViewById(R.id.days_2);
@@ -92,8 +102,6 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
         from = getIntent().getStringExtra("from");
         price = getIntent().getStringExtra("price");
 
-        startUpdatesButtonHandler();
-
         btn_1Day.setOnClickListener(this);
         btn_2day.setOnClickListener(this);
         btn_5day.setOnClickListener(this);
@@ -103,7 +111,12 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        mGoogleApiClient.connect();
+    }
 
     @Override
     protected void onStart() {
@@ -113,72 +126,60 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        //Disconnect from API onPause()
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.days_1:
-                if (from.equalsIgnoreCase("HomeVisit")){
-                    servicetype(service_type,"1");
-                } else {
-                    LocationService("1");
-                }
-
-
+                    address("1");
                 break;
 
             case R.id.days_2:
-                if (from.equalsIgnoreCase("HomeVisit")){
-                    servicetype(service_type,"2");
-                } else {
-                    LocationService("2");
-                }
+                address("2");
                 break;
 
             case R.id.days_5:
-                if (from.equalsIgnoreCase("HomeVisit")){
-                    servicetype(service_type,"5");
-                } else {
-                    LocationService("5");
-                }
+                address("5");
                 break;
 
             case R.id.days_10:
-                if (from.equalsIgnoreCase("HomeVisit")){
-                    servicetype(service_type,"10");
-                } else {
-                    LocationService("10");
-                }
+                address("10");
                 break;
 
             case R.id.days_15:
-                if (from.equalsIgnoreCase("HomeVisit")){
-                    servicetype(service_type,"15");
-                } else {
-                    LocationService("15");
-                }
+                address("15");
                 break;
 
             case R.id.days_20:
-                if (from.equalsIgnoreCase("HomeVisit")){
-                    servicetype(service_type,"20");
-                } else {
-                    LocationService("20");
-                }
+                address("20");
                 break;
 
         }
 
     }
 
-    private void servicetype(String service_type, final String days){
+    private void servicetype(String service_type, final String days) {
 
         RestClient.get().ServicePrice(cat_id, subCat_id, service_type, new Callback<ServiceListingPojo>() {
             @Override
             public void success(ServiceListingPojo serviceListingPojo, retrofit.client.Response response) {
                 try {
-                    Intent intent = new Intent(ServicePackageActivity.this, PaymentActivity.class);
-                    intent.putExtra("price", serviceListingPojo.getData().get(0).getService_price());
-                    intent.putExtra("days",days);
-                    startActivity(intent);
+                    list.addAll(serviceListingPojo.getData());
+                    for (int i=0; i< list.size();i++ ){
+                        Intent intent = new Intent(ServicePackageActivity.this, PaymentActivity.class);
+                        intent.putExtra("price", list.get(i).getService_price());
+                        intent.putExtra("days", days);
+                        startActivity(intent);
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -191,129 +192,54 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
         });
     }
 
-   private void LocationService(String days){
+    private void LocationService(String days,String adds) {
 
-        Intent intent = new Intent(ServicePackageActivity.this,NearByServiceCenter_Activity.class);
-        intent.putExtra("cat_id",cat_id);
-        intent.putExtra("subCat_id",subCat_id);
-        intent.putExtra("latitude",latitude);
-        intent.putExtra("longitude",longitude);
-        intent.putExtra("from",from);
-        intent.putExtra("days",days);
-        intent.putExtra("price",price);
+        Intent intent = new Intent(ServicePackageActivity.this, NearByServiceCenter_Activity.class);
+        intent.putExtra("cat_id", cat_id);
+        intent.putExtra("subCat_id", subCat_id);
+        intent.putExtra("currentLatitude", String.valueOf(currentLatitude));
+        intent.putExtra("currentLongitude",String.valueOf(currentLongitude));
+        intent.putExtra("from", from);
+        intent.putExtra("days", days);
+        intent.putExtra("price", price);
+        intent.putExtra("adds", adds);
 
         startActivity(intent);
 
-   }
-
-    protected synchronized void buildGoogleApiClient() {
-        //     Log.i(TAG, "Building GoogleApiClient");
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        createLocationRequest();
     }
 
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INERVAL_IN_MILLISECONDS);
-        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
-
-
-    public void startUpdatesButtonHandler() {
-
-        if (Build.VERSION.SDK_INT < 23) {
-            startLocationUpdates();
-            return;
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            startLocationUpdates();
-        } else {
-        }
-    }
-
-
-    public void stopUpdatesButtonHandler(View view) {
-        if (mRequestingLocationUpdates) {
-            mRequestingLocationUpdates = false;
-        }
-    }
-
-    private void startLocationUpdates() {
-        //     Log.i(TAG, "startLocationUpdates");
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-
-        PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
-                final Status status = locationSettingsResult.getStatus();
-
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-
-                        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, (com.google.android.gms.location.LocationListener)context);
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-
-                        try {
-                            status.startResolutionForResult(ServicePackageActivity.this, REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
-                            // Ignore the error.
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        // Location settings are not satisfied. However, we have no way
-                        // to fix the settings so we won't show the dialog.
-                        break;
-                }
-            }
-        });
-    }
 
     @Override
     public void onLocationChanged(Location location) {
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-    }
+        currentLatitude = location.getLatitude();
+        currentLongitude = location.getLongitude();
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
+ //       Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        if (mCurrentLocation == null) {
-            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            //           updateUI();
-        }
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-        if (mRequestingLocationUpdates) {
-            startLocationUpdates();
+        if (location == null) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, (com.google.android.gms.location.LocationListener) this);
+
+        } else {
+            //If everything went fine lets get latitude and longitude
+            currentLatitude = location.getLatitude();
+            currentLongitude = location.getLongitude();
+
+    //        Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -324,7 +250,42 @@ public class ServicePackageActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                    /*
+                     * Thrown if Google Play services canceled the original
+                     * PendingIntent
+                     */
+            } catch (IntentSender.SendIntentException e) {
+                // Log the error
+                e.printStackTrace();
+            }
+        } else {
+                /*
+                 * If no resolution is available, display a dialog to the
+                 * user with the error.
+                 */
+            Log.e("Error", "Location services connection failed with code " + connectionResult.getErrorCode());
+        }
+    }
 
+    private void address(final String days){
+        final Dialog dialog = new Dialog(ServicePackageActivity.this);
+        dialog.setTitle("Please fill your address...");
+        dialog.setContentView(R.layout.address_dialog);
+
+        final EditText ed_add = (EditText) dialog.findViewById(R.id.ed_address);
+        Button submit_btn = (Button) dialog.findViewById(R.id.submit_btn);
+
+        submit_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LocationService(days,ed_add.getText().toString());
+            }
+        });
+        dialog.show();
     }
 }
 

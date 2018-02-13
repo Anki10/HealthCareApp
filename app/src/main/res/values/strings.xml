@@ -14,12 +14,16 @@
     Pills or syrups. If you see the letter "D" at the end of a medicine name, it means it includes a decongestant.
     Look for products with phenylephrine or pseudoephedrine.Products with oxymetazoline and phenylephrine
         may work faster than pills or syrups. But if you use them for more than 2-3 days in a row, your congestion could get worse.</string>
-    <string name="title_activity_doctor_panel">DoctorPanelActivity</string>
-    <string name="title_activity_buy_dashboard">BuyDashboardActivity</string>
+    <string name="title_activity_doctor_panel">DoctorPanel</string>
+    <string name="title_activity_buy_dashboard">BuyDashboard</string>
     <string name="title_activity_service_doctor_list">Map</string>
     <string name="search_prod">Enter Product Name/Prize...</string>
     <string name="search_service">Enter Location/Service Name...</string>
 
     <string name="activity_label">Example</string>
     <string name="image_button_content_description">Change state of section</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="SenderId">408945196363</string>
+    <string name="logout_sucessfuly">You have been successfully logged out</string>
 </resources>

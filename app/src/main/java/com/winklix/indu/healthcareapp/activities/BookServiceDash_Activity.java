@@ -140,76 +140,6 @@ public class BookServiceDash_Activity extends AppCompatActivity
 
     }
 
-    private void getServicesFromDB(String cat) {
-        final AsyncTask<String, Void, Void> asyncTaskprog = new AsyncTask<String, Void, Void>() {
-
-            @Override
-
-            protected Void doInBackground(String... Ids) {
-
-                OkHttpClient clientp = new OkHttpClient();
-
-                okhttp3.RequestBody body = new FormBody.Builder().
-                        add("", "")
-                        .build();
-
-                Request requestp = new Request.Builder().post(body)
-                        .url("http://rohit.winklix.com/indu/app/service.php")
-                        .build();
-
-                try {
-                    Response responsep = clientp.newCall(requestp).execute();
-
-
-                    if (responsep.body().toString() == null) {
-                        return null;
-                    } else {
-                        JSONObject jsonObject = new JSONObject(responsep.body().string());
-                        JSONArray jsonarray1 = jsonObject.getJSONArray("data"); //dta
-
-                        for (int i = 0; i < jsonarray1.length(); i++) {
-
-                            JSONObject objectp = jsonarray1.getJSONObject(i);
-
-                            Service_Modal service_modals = new Service_Modal(objectp.getString("service_id"),
-                                    objectp.getString("service_name"),objectp.getString("service_location"),
-                                    objectp.getString("image"));
-
-                            String service_id = objectp.getString("service_id");
-
-                            health_shared_pref.setPrefranceValue(Health_Api.SERVICE_ID,service_id);
-
-                            BookServiceDash_Activity.this.service_modals.add(service_modals);
-
-                        }
-                    }
-                } catch (JSONException | IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                pd = new ProgressDialog(context);
-                pd.setMessage("Please wait...");
-                pd.setCancelable(false);
-                pd.setCanceledOnTouchOutside(false);
-                pd.show();
-            }
-
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                serviceAdapter.notifyDataSetChanged();
-                pd.dismiss();
-            }
-        };
-
-        asyncTaskprog.execute("");
-    }
-
 
     @Override
     public void onBackPressed() {
@@ -267,8 +197,6 @@ public class BookServiceDash_Activity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
 
         }  else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 
